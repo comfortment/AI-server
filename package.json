@@ -1,0 +1,27 @@
+{
+  "name": "ai-server",
+  "version": "1.0.0",
+  "description": "",
+  "main": " ",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/comfortment/AI-server.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/comfortment/AI-server/issues"
+  },
+  "homepage": "https://github.com/comfortment/AI-server#readme",
+  "devDependencies": {
+    "awesome-typescript-loader": "^5.2.1",
+    "tslint": "^5.15.0",
+    "tslint-loader": "^3.5.4",
+    "typescript": "^3.4.3",
+    "webpack": "^4.30.0",
+    "webpack-cli": "^3.3.0"
+  }
+}

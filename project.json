@@ -1,0 +1,14 @@
+{
+  "name": "comfortment-AI",
+  "description": "",
+  "runtime": "nodejs8.10",
+  "memory": 128,
+  "timeout": 5,
+  "handler": "lib.default",
+  "role": "arn:aws:iam::002257341422:role/comfortment-AI_lambda_function",
+  "environment": {},
+  "hooks": {
+    "clean": "rm -rf lib",
+    "build": "../../node_modules/.bin/webpack --config ../../webpack.config.js --bail"
+  }
+}
