@@ -1,4 +1,5 @@
 export interface ApartmentInformation {
+  id: string;
   buildingNumber: number;
   roomNumber: number;
   name: string;
