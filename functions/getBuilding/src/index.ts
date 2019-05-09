@@ -1,7 +1,6 @@
-import { Handler } from "aws-lambda";
+import { Handler, APIGatewayProxyEvent, APIGatewayProxyResult } from "aws-lambda";
 
 import { docClient } from "../../../aws";
-import { GetBuildingRequest } from "../../../types/GetBuildingRequest";
 import { DocumentClient } from "aws-sdk/clients/dynamodb";
 import {
   DYNAMODB_COMFORTMENT_AI,
@@ -9,24 +8,34 @@ import {
 } from "../../../constants";
 import { BUILDING_NOT_FOUND } from "../../../errors";
 
-const handler: Handler = async (event: GetBuildingRequest, _, __) => {
-  const { buildingNumber } = event;
+const handler: Handler = async (
+  event: APIGatewayProxyEvent,
+  _,
+  __
+): Promise<APIGatewayProxyResult> => {
+  const { buildingNumber } = event.queryStringParameters;
   const dynamodbGetDataQuery: DocumentClient.QueryInput = {
     TableName: DYNAMODB_COMFORTMENT_AI,
     IndexName: DYNAMODB_COMFORTMENT_AI_BY_BUILDING_NUMBER,
     KeyConditionExpression: "buildingNumber = :buildingNumber",
     ExpressionAttributeValues: {
-      ":buildingNumber": buildingNumber
+      ":buildingNumber": Number(buildingNumber)
     }
   };
 
   const { Items } = await docClient.query(dynamodbGetDataQuery).promise();
 
   if (!Items || !Items.length) {
-    throw BUILDING_NOT_FOUND;
+    return {
+      statusCode: 404,
+      body: JSON.stringify({ message: BUILDING_NOT_FOUND.message })
+    };
   }
 
-  return Items;
+  return {
+    statusCode: 200,
+    body: JSON.stringify(Items)
+  };
 };
 
 export default handler;
