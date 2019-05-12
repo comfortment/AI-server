@@ -35,14 +35,33 @@ const handler: Handler = async (
   const underFloorRoomNumber = floor - 100;
 
   if (underFloor > 0) {
-    const underFloorsResponse = await axios.get(GET_FLOOR_API, {
+    const underFloorsResponse = await axios.get(GET_FLOOR_API + "/floor", {
       params: {
         buildingNumber,
         floor
       }
     });
 
+    if (underFloorsResponse.status === 404) {
+      return {
+        statusCode: 404,
+        body: JSON.stringify({
+          message: `${floor} 층 정보를 찾지 못했어요!`
+        })
+      };
+    }
+
     const underFloors: ApartmentInformation[] = underFloorsResponse.data;
+
+    if (!underFloors || !underFloors.length) {
+      return {
+        statusCode: 400,
+        body: JSON.stringify({
+          message: "아래층 정보가 없어요~"
+        })
+      };
+    }
+
     const underFloorApartment = underFloors.filter(
       apartment => apartment.roomNumber === underFloorRoomNumber
     )[0];
