@@ -32,13 +32,13 @@ const handler: Handler = async (
 
   const floor = Math.floor(roomNumber / 100);
   const underFloor = floor - 1;
-  const underFloorRoomNumber = floor - 100;
+  const underFloorRoomNumber = roomNumber - 100;
 
   if (underFloor > 0) {
     const underFloorsResponse = await axios.get(GET_FLOOR_API + "/floor", {
       params: {
         buildingNumber,
-        floor
+        floor: underFloor
       }
     });
 
@@ -52,8 +52,11 @@ const handler: Handler = async (
     }
 
     const underFloors: ApartmentInformation[] = underFloorsResponse.data;
+    const underFloorApartment = underFloors.filter(
+      apartment => apartment.roomNumber === underFloorRoomNumber
+    )[0];
 
-    if (!underFloors || !underFloors.length) {
+    if (!underFloors || !underFloors.length || !underFloorApartment) {
       return {
         statusCode: 400,
         body: JSON.stringify({
@@ -61,10 +64,6 @@ const handler: Handler = async (
         })
       };
     }
-
-    const underFloorApartment = underFloors.filter(
-      apartment => apartment.roomNumber === underFloorRoomNumber
-    )[0];
 
     if (underFloorApartment.acceptedDecibel < decibel) {
       try {
